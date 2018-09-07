@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">cardas</string>
+    <string name="txt_btn_logout_main">Logout</string>
+    <string name="txt_btn_register_login">Don\'t have account?</string>
+    <string name="txt_et_email_hint_login">Your E-mail Address</string>
+    <string name="txt_et_password_hint_login">Your Password</string>
+    <string name="txt_btn_login_login">Login</string>
+    <string name="txt_et_email_hint_register">Your E-mail Address</string>
+    <string name="txt_et_password_hint_register">Set a Password</string>
+    <string name="txt_et_repassword_register">Confirm Your Password</string>
+    <string name="txt_btn_register_register">Register</string>
 </resources>
