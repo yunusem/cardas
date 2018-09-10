@@ -9,4 +9,9 @@
     <string name="txt_et_password_hint_register">Set a Password</string>
     <string name="txt_et_repassword_register">Confirm Your Password</string>
     <string name="txt_btn_register_register">Register</string>
+    <string name="txt_et_name_hint_userinfo">Name</string>
+    <string name="txt_et_surname_hint_userinfo">Surname</string>
+    <string name="txt_sw_type_userinfo">Owner/Passenger</string>
+    <string name="txt_btn_save_userinfo">Save</string>
+    <string name="txt_btn_editprofile_main">Edit Profile</string>
 </resources>

@@ -14,12 +14,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     private EditText mEtEmail;
     private EditText mEtPassword;
@@ -64,7 +69,29 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    sendToMain();
+
+                    FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+                    String uid = current_user.getUid();
+
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+
+                    HashMap<String, String> userMap = new HashMap<>();
+                    userMap.put("name", "empty");
+                    userMap.put("surname", "empty");
+                    userMap.put("type", "0");
+                    userMap.put("km", "0");
+                    userMap.put("wallet", "0");
+
+                    mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if (task.isSuccessful()) {
+                                sendToMain();
+                            }
+                        }
+                    });
+
                 } else {
                     String task_result = task.getException().getMessage().toString();
                     Toast.makeText(RegisterActivity.this, "Error" + task_result, Toast.LENGTH_LONG).show();
