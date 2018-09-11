@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +29,10 @@ public class UserInfoActivity extends AppCompatActivity {
     private Switch mSwType;
     private Button mBtnSave;
 
+    private String name;
+    private String surname;
+    private String type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,19 +43,39 @@ public class UserInfoActivity extends AppCompatActivity {
         mSwType = findViewById(R.id.sw_type_userinfo);
         mBtnSave = findViewById(R.id.btn_save_userinfo);
 
+        Intent intent = getIntent();
+        String purpose = intent.getExtras().getString("purpose");
+
+        if (purpose.equals("edit")) {
+
+            name = intent.getExtras().getString("name");
+            surname = intent.getExtras().getString("surname");
+            type = intent.getExtras().getString("type");
+
+            mEtName.setText(name);
+            mEtSurname.setText(surname);
+
+            if (type.equals("2")) {
+                mSwType.setChecked(true);
+            }
+
+        }
+
         mBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = mEtName.getText().toString();
-                String surname = mEtSurname.getText().toString();
-                String type = "1";
+                name = mEtName.getText().toString();
+                surname = mEtSurname.getText().toString();
+                type = "1";
+
                 if (mSwType.isChecked()) {
                     type = "2";
                 }
 
-
-                if (!TextUtils.isEmpty(name) || !TextUtils.isEmpty(surname)) {
+                if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(surname)) {
                     saveProfileInfo(name,surname,type);
+                } else {
+                    Toast.makeText(UserInfoActivity.this, "Fill all fields", Toast.LENGTH_LONG).show();
                 }
             }
         });

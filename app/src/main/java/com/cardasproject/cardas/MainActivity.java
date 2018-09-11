@@ -25,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtnEdit;
     private ProgressBar mPbUserInfo;
 
+    private String uid;
+    private String name;
+    private String surname;
+    private String type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendToEditProfile() {
-        sendToUserInfo();
+        Intent userInfo_intent = new Intent(MainActivity.this, UserInfoActivity.class);
+        userInfo_intent.putExtra("name", name);
+        userInfo_intent.putExtra("surname", surname);
+        userInfo_intent.putExtra("type", type);
+        userInfo_intent.putExtra("purpose", "edit");
+        startActivity(userInfo_intent);
     }
 
     @Override
@@ -62,29 +72,22 @@ public class MainActivity extends AppCompatActivity {
 
         else {
             FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-            String uid = current_user.getUid();
+            uid = current_user.getUid();
             mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
 
             mUsersDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    String name = dataSnapshot.child("name").getValue().toString();
-                    String surname = dataSnapshot.child("surname").getValue().toString();
-                    String type = dataSnapshot.child("type").getValue().toString();
-
-                    /*
-                    Log.i("name: ", name);
-                    Log.i("surname: ", surname);
-                    Log.i("type: ", type);
-                    */
+                    name = dataSnapshot.child("name").getValue().toString();
+                    surname = dataSnapshot.child("surname").getValue().toString();
+                    type = dataSnapshot.child("type").getValue().toString();
 
                     if (name.equals("empty") || surname.equals("empty") || type.equals("0")) {
                         sendToUserInfo();
                     } else {
-                        mPbUserInfo.setVisibility(View.GONE);
+                        profileLoaded();
                     }
-
                 }
 
                 @Override
@@ -95,8 +98,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void profileLoaded() {
+        mPbUserInfo.setVisibility(View.GONE);
+        mBtnEdit.setVisibility(View.VISIBLE);
+        mBtnLogout.setVisibility(View.VISIBLE);
+    }
+
     private void sendToUserInfo() {
         Intent userInfo_intent = new Intent(MainActivity.this, UserInfoActivity.class);
+        userInfo_intent.putExtra("purpose", "new");
         startActivity(userInfo_intent);
     }
 
